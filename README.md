@@ -20,3 +20,9 @@
   sometimes more based on other installed libraries.
 
 4. Run the `sample.py` in python environment opened from the terminal of step 2 	
+
+### Sentiment analysis of a txt file
+
+Use bellow mentioned code to get the sentiment score of a txt file
+
+`python sentiment-analysis.py positive-sample.txt`
