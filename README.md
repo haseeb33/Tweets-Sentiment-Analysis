@@ -11,12 +11,12 @@
 
    For Linux or Mac`export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"`
    
-   For Windows `$env:GOOGLE_APPLICATION_CREDENTIALS="[PATH]"`
+   For Windows `env:GOOGLE_APPLICATION_CREDENTIALS="[PATH]"`
    
-   Change "[PATH]" with JSON file's location
+   Change `[PATH]` with JSON file's location
 
 3. Install Pre-req libraries
- 'pip install google-cloud-language'
+ `pip install google-cloud-language`
   sometimes more based on other installed libraries.
 
 4. Run the `sample.py` in python environment opened from the terminal of step 2 	
