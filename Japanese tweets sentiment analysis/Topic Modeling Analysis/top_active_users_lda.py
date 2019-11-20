@@ -78,9 +78,6 @@ a = extract_top_65.loc[extract_top_65[">=50"]>=0, "通し番号"]
 more_than_65_tweets_users = [i for i in a]
 
 imp_df = original_df.loc[original_df["通し番号"].isin(a.to_frame()["通し番号"])]
-H_col = imp_df["一般的信頼合計"].values.tolist()
-I_col = imp_df["社会的スキル合計"].values.tolist()
-J_col = imp_df["心理的幸福感合計"].values.tolist()
 
 corpus1 = []; H=[]; I=[]; J=[]
 for d in df:
@@ -97,28 +94,13 @@ docs1 = pytm.DocumentSet(corpus1, min_df=5, max_df=0.5)
 theta1 = lda.get_theta(docs1)
 print("Got theta values")
 
+df = pd.DataFrame(topic_list)
 df1 = pd.DataFrame(theta1)
 df2 = pd.DataFrame([[training_time, "Seconds"]])
 
-theta_df = df1
-H_col = imp_df["一般的信頼合計"].values.tolist()
-I_col = imp_df["社会的スキル合計"].values.tolist()
-J_col = imp_df["心理的幸福感合計"].values.tolist()
-
-theta_df["H"] = H_col
-theta_df["I"] = I_col
-theta_df["J"] = J_col
-corr = theta_df.corr()
-
-df3 = pd.DataFrame([corr["H"], corr["I"], corr["J"]])
-df3 = df3.T
-df3 = df3.sort_values(by=['H','I','J'], ascending=False)
-
-df = pd.DataFrame(topic_list)
 writer = pd.ExcelWriter("NLP_JP100Topics65users.xlsx")
 df.to_excel(writer, 'LDA')
 df1.to_excel(writer, 'ThetaValues')
 df2.to_excel(writer, 'LDATime')
-df3.to_excel(writer, "CorrWithTopics")
 writer.save()
 print("Job Done")
