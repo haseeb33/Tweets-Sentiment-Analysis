@@ -22,7 +22,7 @@ def scatterplot(x_data, y_data, x_label="", y_label="", title="", color = "r", y
     ax.set_title(title)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
-
+    
 def lineplot(x_data, y_data, x_label="", y_label="", title=""):
     _, ax = plt.subplots()
     ax.plot(x_data, y_data, lw = 2, color = '#539caf', alpha = 1)
@@ -37,11 +37,11 @@ def removeSpecialChar(orignal):
 def word_tokenization(file, tagger):
     txt = ""
     with open(file, 'r') as f:
-        txt += str(removeSpecialChar(f.read()))
+        txt += str(removeSpecialChar(f.read()))  
     txt_ls = tagger.parse(txt).split()
-    return (" ".join(txt_ls))
+    return (" ".join(txt_ls))    
 
-
+  
 def vocab_count_X(df):
     tagger = MeCab.Tagger("-Owakati")
     vectorizer = TfidfVectorizer(min_df=15, max_df=30)
@@ -52,7 +52,7 @@ def vocab_count_X(df):
         if fn in glob.glob('tweets/*.txt'):
             corpus.append(word_tokenization(fn, tagger))
             H.append(d["一般的信頼合計"]); I.append(d["社会的スキル合計"]); J.append(d["心理的幸福感合計"])
-
+            
     X = vectorizer.fit_transform(corpus)
     return X, H, I, J
 
@@ -68,7 +68,7 @@ def vocab_count_X_65_users(df):
             if fn in glob.glob('tweets/*.txt'):
                 corpus.append(word_tokenization(fn, tagger))
                 H.append(d["一般的信頼合計"]); I.append(d["社会的スキル合計"]); J.append(d["心理的幸福感合計"])
-
+                
     X = vectorizer.fit_transform(corpus)
     return X, H, I, J
 
@@ -104,9 +104,48 @@ def gender_X(df):
     J = df["心理的幸福感合計"].values.tolist()
     return X, H, I, J
 
+def followers_X(df):
+    X = df[df['followers'].notna()]['followers'].values.tolist()
+    X = [[i] for i in X]
+    H = df[df['followers'].notna()]["一般的信頼合計"].values.tolist()
+    I = df[df['followers'].notna()]["社会的スキル合計"].values.tolist()
+    J = df[df['followers'].notna()]["心理的幸福感合計"].values.tolist()
+    return X, H, I, J
+
+def following_X(df):
+    X = df[df['following'].notna()]['following'].values.tolist()
+    X = [[i] for i in X]
+    H = df[df['following'].notna()]["一般的信頼合計"].values.tolist()
+    I = df[df['following'].notna()]["社会的スキル合計"].values.tolist()
+    J = df[df['following'].notna()]["心理的幸福感合計"].values.tolist()
+    return X, H, I, J
+
+def followers_following_X(df):
+    X = df.loc[df['following'].notna()][['followers', 'following']].values.tolist()
+    H = df[df['following'].notna()]["一般的信頼合計"].values.tolist()
+    I = df[df['following'].notna()]["社会的スキル合計"].values.tolist()
+    J = df[df['following'].notna()]["心理的幸福感合計"].values.tolist()
+    return X, H, I, J
+
+def all_numerical_params_X(df):
+    df['性別'] = df['性別'].fillna((df['性別'].mean()))
+    df['followers'] = df['followers'].fillna((df['followers'].mean()))
+    df['following'] = df['following'].fillna((df['following'].mean()))
+    df['tweet_count'] = df['tweet_count'].fillna((df['tweet_count'].mean()))
+    df['﻿negative_tweet_propotion'] = df['﻿negative_tweet_propotion'].fillna((df['﻿negative_tweet_propotion'].mean()))
+    X = df[['性別', 'followers', 'following', 'tweet_count', '﻿negative_tweet_propotion']].values.tolist()
+    H = df["一般的信頼合計"].values.tolist()
+    I = df["社会的スキル合計"].values.tolist()
+    J = df["心理的幸福感合計"].values.tolist()
+    return X, H, I, J
+
 def topic_proportion_X_65_users(df, df_topics):
     X = df_topics.drop(columns=['index','通し番号']).values.tolist()
     H = df[df['tweet_count'] >= 50]["一般的信頼合計"].values.tolist()
     I = df[df['tweet_count'] >= 50]["社会的スキル合計"].values.tolist()
     J = df[df['tweet_count'] >= 50]["心理的幸福感合計"].values.tolist()
     return X, H, I, J
+
+
+
+
